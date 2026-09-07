@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Оцените наше обслуживание</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #f5f5f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      color: #1d1d1f;
+    }
+    .card {
+      background: #ffffff;
+      padding: 36px 24px;
+      border-radius: 24px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+    }
+    h2 { font-size: 22px; font-weight: 600; margin-bottom: 10px; }
+    p { color: #86868b; font-size: 15px; margin-bottom: 28px; line-height: 1.4; }
+    .stars { display: flex; justify-content: center; gap: 10px; }
+    .star {
+      font-size: 42px;
+      cursor: pointer;
+      color: #e0e0e0;
+      transition: transform 0.15s ease, color 0.15s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .star:active { transform: scale(1.25); }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Как всё прошло?</h2>
+    <p>Пожалуйста, оцените качество нашего обслуживания:</p>
+    <div class="stars">
+      <span class="star" onclick="rate(1)">★</span>
+      <span class="star" onclick="rate(2)">★</span>
+      <span class="star" onclick="rate(3)">★</span>
+      <span class="star" onclick="rate(4)">★</span>
+      <span class="star" onclick="rate(5)">★</span>
+    </div>
+  </div>
+
+  <script>
+    const YANDEX_MAPS_URL = "https://yandex.ru/maps/org/teremok/1364154296/reviews/?add-review=true&display-text=%D0%93%D0%B4%D0%B5%20%D0%BF%D0%BE%D0%B5%D1%81%D1%82%D1%8C&ll=30.363335%2C60.032232&mode=search&sll=30.330376%2C60.032232&sspn=0.157928%2C0.046038&tab=reviews&text=%D0%93%D0%B4%D0%B5%20%D0%BF%D0%BE%D0%B5%D1%81%D1%82%D1%8C&z=13";
+    const ADMIN_TELEGRAM_URL = "https://t.me/shekiants";
+
+    function rate(stars) {
+      const starElements = document.querySelectorAll('.star');
+      starElements.forEach((el, index) => {
+        el.style.color = index < stars ? '#ffb703' : '#e0e0e0';
+      });
+
+      setTimeout(() => {
+        if (stars >= 4) {
+          window.location.href = YANDEX_MAPS_URL;
+        } else {
+          window.location.href = ADMIN_TELEGRAM_URL;
+        }
+      }, 200);
+    }
+  </script>
+
+</body>
+</html>
