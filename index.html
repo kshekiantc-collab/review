@@ -53,7 +53,6 @@
       display: block;
     }
 
-    /* Кнопки выбора на 1 шаге */
     .btn-main {
       width: 100%;
       padding: 16px 20px;
@@ -91,7 +90,6 @@
       transform: scale(0.98);
     }
 
-    /* Кнопки платформ на 2 шаге */
     .platform-btn {
       width: 100%;
       padding: 14px 18px;
@@ -112,21 +110,10 @@
       transform: scale(0.98);
     }
 
-    .btn-yandex {
-      background-color: #fc3f1d;
-    }
-
-    .btn-2gis {
-      background-color: #2eaf00;
-    }
-
-    .btn-google {
-      background-color: #4285f4;
-    }
-
-    .btn-telegram {
-      background-color: #24a1de;
-    }
+    .btn-yandex { background-color: #fc3f1d; }
+    .btn-2gis { background-color: #2eaf00; }
+    .btn-google { background-color: #4285f4; }
+    .btn-telegram { background-color: #24a1de; }
 
     .btn-back {
       background: none;
@@ -157,7 +144,7 @@
       </button>
     </div>
 
-    <!-- ШАГ 2А: Положительный отзыв (Карты) -->
+    <!-- ШАГ 2А: Положительный отзыв -->
     <div id="step-positive" class="step">
       <p class="subtitle">Спасибо! Выберите удобный сервис, чтобы оставить отзыв:</p>
       
@@ -176,7 +163,7 @@
       <button class="btn-back" onclick="goToStep('step-1')">← Назад</button>
     </div>
 
-    <!-- ШАГ 2Б: Негативный отзыв (Telegram) -->
+    <!-- ШАГ 2Б: Негативный отзыв -->
     <div id="step-negative" class="step">
       <p class="subtitle">Нам очень жаль! Напишите руководителю напрямую, чтобы мы всё исправили:</p>
       
@@ -190,44 +177,35 @@
   </div>
 
   <script>
-    // Навигация между шагами
     function goToStep(stepId) {
       document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
       document.getElementById(stepId).classList.add('active');
     }
 
-    // Загрузка данных клиента из clients.json
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
-      const clientId = urlParams.get('id') || 'teremok'; // Если id не передан, берём 'teremok'
+      const clientId = urlParams.get('id');
 
       fetch('./clients.json')
-        .then(response => {
-          if (!response.ok) throw new Error('Файл clients.json не найден');
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-          const client = data[clientId];
+          const keys = Object.keys(data);
+          if (keys.length === 0) return;
+
+          // Если ID передали и он есть в базе — берем его. 
+          // Если ID не передали или он не найден — берем самого первого клиента из JSON!
+          const client = (clientId && data[clientId]) ? data[clientId] : data[keys[0]];
 
           if (client) {
-            // Название компании
             document.getElementById('client-name').textContent = client.name || 'Оцените нашу работу';
 
-            // Привязываем ссылки карт
             if (client.yandex) document.getElementById('btn-yandex').href = client.yandex;
             if (client.gis2) document.getElementById('btn-2gis').href = client.gis2;
             if (client.google) document.getElementById('btn-google').href = client.google;
-
-            // Привязываем Telegram
             if (client.telegram) document.getElementById('btn-telegram').href = client.telegram;
-          } else {
-            document.getElementById('client-name').textContent = 'Заведение не найдено';
           }
         })
-        .catch(error => {
-          console.error('Ошибка загрузки данных:', error);
-          document.getElementById('client-name').textContent = 'Оцените нашу работу';
-        });
+        .catch(err => console.error('Ошибка загрузки clients.json:', err));
     });
   </script>
 
